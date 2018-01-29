@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "twoD.h"
-
+#include "life.h"
 /** Main function.
  * @param argc Number of words on the command line.
  * @param argv Array of pointers to character strings containing the
@@ -42,19 +42,15 @@ int main(int argc, char **argv) {
 	columns = atoi(argv[2]);
 	gens = atoi(argv[3]);
 	inputFileName = argv[4];
-	if(argc > 5){
+	if(argc > 6){
 		doPrint = atoi(argv[5]);
 		doPause = atoi(argv[6]);
 	}
-	else if(argc > 4){
+	else if(argc > 5){
 		doPrint = atoi(argv[5]);
 	}
 
-	/* Here is how you would allocate an array to hold the grid.
-	*/
-	gridA = make2Dchar(rows, columns);
-	// You should check that it succeeded.
-
+	//TODO make print and pause take in y and n
 
 	/* Eventually, need to try to open the input file.
 	*/
@@ -64,10 +60,6 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	/*Once opened, you can read from the file one character at a time with fgetc().
-	 * You can read one line at a time using fgets().
-	 * You can read from standard input (the keyboard) with getchar().
-	*/
 
 	char temp;
 	int lastLine = 0;
@@ -76,7 +68,7 @@ int main(int argc, char **argv) {
 	int maxRow = -1;
 	int maxCol = -1;
 	int **tempBoard = make2Dint(rows,columns);
-	
+
 	while(!lastLine){
 		temp = fgetc(input);
 		if(temp == 'o')	{
@@ -110,32 +102,94 @@ int main(int argc, char **argv) {
 	int offsetRow = rows / 2 - maxRow / 2;
 	printf("%d,%d\n",offsetRow,offsetCol);
 	
-
+	
+	int **previousBoard = make2Dint(rows,columns);
+	
+	
+	for(int r = 0; r < maxRow; r++){
+		for(int c = 0; c < maxCol;c++){
+			previousBoard[r + offsetRow][c + offsetCol] = tempBoard[r][c];
+		}
+	}
+	printBoard(previousBoard,rows,columns);
+	deAllocate2DArray(tempBoard,rows);
 	int repeat = 0;
-	int gensRan = 0;
-	int **currentBoard = tempBoard;
-	int **previousBoard;
-
-	while(gensRan < gens && !repeat){
-		printf("%d",doPrint);
+	int dead = 0;
+	int gensRan = 1;
+	int **currentBoard = emulateBoard(previousBoard,rows,columns);
+	
+	while(gensRan < gens && !repeat && !dead){
 		if(doPrint){
 			printBoard(currentBoard,rows,columns);			
 		}
+		tempBoard = emulateBoard(currentBoard,rows,columns); 
+		//TODO COMPARE
+		int compareCurrent = checkTermination(tempBoard,currentBoard,rows,columns);
+		int comparePrevious = checkTermination(tempBoard,previousBoard,rows,columns);
+		if(compareCurrent || comparePrevious){
+			if(compareCurrent == -1 || compareCurrent == -1){
+				dead = 1;
+			}
+			else{
+				repeat = 1;
+			}
+		}
 
+		deAllocate2DArray(previousBoard,rows);
+		previousBoard = currentBoard;
+		currentBoard = tempBoard;	
 		gensRan++;
+		printf("%d",gensRan);
+		if(doPause)
+			getchar();
+
 	}
 	printBoard(currentBoard,rows,columns);
 	if(repeat){
 		printf("Board terminated due to repetition.\n");
+	}
+
+	if(dead){
+		printf("Board terminated due to death.\n");
 	}
 	printf("Board ran for %d generations.\n", gensRan);
 
 	return EXIT_SUCCESS;
 }
 
-int** emulateBoard(int**board, int rows, int columns){
-	int **a;
-	
+int** emulateBoard(int** board, int rows, int columns){
+	int **a = make2Dint(rows,columns); //TODO change name
+	int numNeighbors;
+	for(int r = 0; r < rows; r++){
+		for(int c = 0; c < columns; c++){
+
+			numNeighbors = 0-board[r][c];
+			for(int x = -1; x < 2; x++){
+				if(r+ x>= 0 && r + x < rows){
+					for(int y = -1; y < 2; y++){
+						if(c+y >= 0 && c+y < columns ){
+							numNeighbors += board[r+x][c+y];
+						}
+					}
+				}
+			}
+			
+			if(board[r][c]){
+				if(numNeighbors < 2 || numNeighbors >3 ){
+					a[r][c] = 0;
+				}
+				else{
+					a[r][c] = 1;
+				}
+			}
+			else if(numNeighbors == 3 ){
+				a[r][c] = 1;
+			}
+			else{
+				a[r][c] = 0;
+			}
+		}	
+	}
 	return a;
 }
 
@@ -154,13 +208,19 @@ void printBoard(int** board, int rows, int columns){
 	}
 }
 
-int checkBoardRepetition(int** boardA, int** boardB, int rows, int columns){
+int checkTermination(int** boardA, int** boardB, int rows, int columns){
+	int sum = 0;
 	for(int r = 0;r < rows; r++){
 		for(int c = 0; c < columns; c++){
 			if(boardA[r][c] != boardB[r][c]){
-				return 1;			
+				return 0;			
 			}
+			sum+= boardA[r][c];
 		}
 	}
-	return 0;
+	if(sum == 0){
+		printf("%d\n",sum);
+		return -1;
+	}
+	return 1;
 }

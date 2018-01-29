@@ -35,12 +35,9 @@ int** make2Dint(int rows, int columns) {
 	return a;
 }
 
-/**
- * You need to fill in this function and header comment.
- */
-char** make2Dchar(int rows, int columns) {
-
-	char **a; // Array of pointers to rows
-	a = (char**) NULL; // Replace this...
-	return a;
+void deAllocate2DArray(int** array, int rows){
+	for(int i = 0; i < rows; i++){
+		free(array[i]);
+	}
+	free(array);
 }

@@ -9,6 +9,5 @@
 
 // Function prototypes:
 int** make2Dint(int rows, int columns);
-char** make2Dchar(int rows, int columns);
-
+void deAllocate2DArray(int** array, int rows);
 #endif /* 2D_H_ */
