@@ -260,8 +260,7 @@ int** emulateBoard(int** board, int rows, int columns){
 	return newBoard;
 }
 
-/*
- * Prints the board
+/** Prints the board
  * @param the board
  * @param number of rows in the board
  * @param number of columns in the board
@@ -282,9 +281,8 @@ void printBoard(int** board, int rows, int columns){
 		printf("\n");
 	}
 }
-/*
- *Checks the termination conditions, returns 1 if the boards are the same, -1 if the board
- *is dead and 0 otherwise.
+/** Checks the termination conditions, returns 1 if the boards are the same, -1 if the board
+ * is dead and 0 otherwise.
  * @param The board that needs to be checked for death
  * @param The board being compared to
  * @param The number of rows

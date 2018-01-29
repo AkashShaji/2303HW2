@@ -34,10 +34,9 @@ int** make2Dint(int rows, int columns) {
 	}
 	return a;
 }
-/*
- *De-allocates the memory in a 2d array
- *@param pointer to the array
- *@param the number of rows in the array
+/** De-allocates the memory in a 2d array
+ * @param pointer to the array
+ * @param the number of rows in the array
  */
 void deAllocate2DArray(int** array, int rows){
 	//frees the memory for each row
