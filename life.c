@@ -42,7 +42,13 @@ int main(int argc, char **argv) {
 	columns = atoi(argv[2]);
 	gens = atoi(argv[3]);
 	inputFileName = argv[4];
-
+	if(argc > 5){
+		doPrint = atoi(argv[5]);
+		doPause = atoi(argv[6]);
+	}
+	else if(argc > 4){
+		doPrint = atoi(argv[5]);
+	}
 
 	/* Here is how you would allocate an array to hold the grid.
 	*/
@@ -107,22 +113,22 @@ int main(int argc, char **argv) {
 
 	int repeat = 0;
 	int gensRan = 0;
-	int** currentBoard;
-	int** previousBoard;
+	int **currentBoard = tempBoard;
+	int **previousBoard;
 
-	while(gens > 0 && !repeat){
+	while(gensRan < gens && !repeat){
+		printf("%d",doPrint);
 		if(doPrint){
 			printBoard(currentBoard,rows,columns);			
 		}
-		
+
+		gensRan++;
 	}
 	printBoard(currentBoard,rows,columns);
 	if(repeat){
-		printf("Board terminated due to repetition.");
+		printf("Board terminated due to repetition.\n");
 	}
-	else{
-		printf("Board ran for ")
-	}
+	printf("Board ran for %d generations.\n", gensRan);
 
 	return EXIT_SUCCESS;
 }
