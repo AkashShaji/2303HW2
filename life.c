@@ -1,4 +1,5 @@
-/* Game of Life
+/*
+ * Game of Life
 */
 
 #include <stdio.h>
@@ -61,6 +62,7 @@ int main(int argc, char **argv) {
 	 * You can read one line at a time using fgets().
 	 * You can read from standard input (the keyboard) with getchar().
 	*/
+	printf("%s",fgets(input));
 
 	return EXIT_SUCCESS;
 }
