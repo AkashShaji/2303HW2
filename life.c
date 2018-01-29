@@ -62,7 +62,99 @@ int main(int argc, char **argv) {
 	 * You can read one line at a time using fgets().
 	 * You can read from standard input (the keyboard) with getchar().
 	*/
-	printf("%s",fgets(input));
+
+	char temp;
+	int lastLine = 0;
+	int row = 0;
+	int col = 0;
+	int maxRow = -1;
+	int maxCol = -1;
+	int **tempBoard = make2Dint(rows,columns);
+	
+	while(!lastLine){
+		temp = fgetc(input);
+		if(temp == 'o')	{
+			tempBoard[row][col] = 0;
+			col++;
+		}
+		else if (temp == 'x'){
+			tempBoard[row][col] = 1;
+			col++;
+		}
+		else if (temp == '\n'){
+			if(col > maxCol){
+				maxCol = col;
+			}
+			row++;
+			col = 0;
+		} 
+		else{
+			lastLine = 1;
+			maxRow = row;
+		}
+	}
+	printf("%d,%d\n",maxRow,maxCol);		
+	
+	if(rows - maxRow < 0 || columns - maxCol < 0){
+		printf("There is not enough space to emulate the input file, try again with a larger board\n");
+		return EXIT_FAILURE;
+	}
+
+	int offsetCol = columns / 2 - maxCol / 2;
+	int offsetRow = rows / 2 - maxRow / 2;
+	printf("%d,%d\n",offsetRow,offsetCol);
+	
+
+	int repeat = 0;
+	int gensRan = 0;
+	int** currentBoard;
+	int** previousBoard;
+
+	while(gens > 0 && !repeat){
+		if(doPrint){
+			printBoard(currentBoard,rows,columns);			
+		}
+		
+	}
+	printBoard(currentBoard,rows,columns);
+	if(repeat){
+		printf("Board terminated due to repetition.");
+	}
+	else{
+		printf("Board ran for ")
+	}
 
 	return EXIT_SUCCESS;
+}
+
+int** emulateBoard(int**board, int rows, int columns){
+	int **a;
+	
+	return a;
+}
+
+
+void printBoard(int** board, int rows, int columns){
+	for(int r = 0;r < rows; r++){
+		for(int c = 0; c < columns; c++){
+			if(board[r][c]){
+				printf("x");
+			}	
+			else{
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+}
+
+int checkBoardRepetition(int** boardA, int** boardB, int rows, int columns){
+	for(int r = 0;r < rows; r++){
+		for(int c = 0; c < columns; c++){
+			if(boardA[r][c] != boardB[r][c]){
+				return 1;			
+			}
+		}
+	}
+	return 0;
 }
