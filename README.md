@@ -50,6 +50,10 @@ It takes in the newest board and the board that needs to be compared to. It then
 
 It returns 0 if termination is not required, 1 if there is repetition and -1 if there is death.
 
+Analysis
+===============
+The starting pattern I analyzed was acorn. I found that it would terminate after 168 generations on a 30x30 board and would terminate after 875 generations on a 50x160, both due to repetition.  
+
 Challenges
 ===============
 The biggest challenge I had when creating this program was working with arrays in C. I was used to java handling everything for you and it took me a while to get used to the intricies of arrays in C.
